@@ -46,8 +46,9 @@ The assessment must combine:
 5. API compatibility analysis
 6. Add-on compatibility analysis
 7. Runtime analysis
-8. Upgrade simulation
-9. Failure scenario modeling
+8. API deprecation scanning (kubent — cluster + Helm history, pluto — Helm releases + manifests)
+9. Upgrade simulation
+10. Failure scenario modeling
 
 ---
 
@@ -62,6 +63,21 @@ kubectl get nodes -o wide
 kubectl get ns
 kubectl api-resources
 kubectl get apiservices
+```
+
+### API Deprecation Scan (Read-Only)
+
+These tools detect deprecated/removed APIs that `kubectl` alone cannot surface. `kubectl` silently converts old API versions to current ones, so a `kubectl get` may return `apps/v1` even when the object was originally created with `extensions/v1beta1`. These scanners inspect the stored manifest history (Helm release secrets, last-applied-config annotations) to find the true original API versions.
+
+```bash
+# kubent — scans live cluster resources + Helm v3 history (Secrets/ConfigMaps)
+kubent -o json
+
+# pluto — scans Helm releases (v2 + v3) running in the cluster
+pluto detect-helm -o json --target-versions k8s=<TARGET_VERSION>
+
+# Optional: scan static manifest files in your infrastructure-as-code repo
+# pluto detect-files -d <path-to-manifests-directory>
 ```
 
 Capture:
@@ -208,7 +224,7 @@ networking.k8s.io/v1beta1
 admissionregistration.k8s.io/v1beta1
 ```
 
-Scan all cluster resources.
+Scan all cluster resources. **Incorporate the kubent and pluto output from Step 1** — these tools detect deprecated APIs stored in Helm release history and last-applied-configuration annotations that `kubectl` silently converts to current API versions. A resource that appears to use `apps/v1` via `kubectl get` may have been originally deployed as `extensions/v1beta1` and will fail after the API is removed.
 
 For every removed API found:
 

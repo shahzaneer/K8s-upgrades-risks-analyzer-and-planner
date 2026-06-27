@@ -96,9 +96,38 @@ kubectl get pods -A | grep Pending || echo "No pending pods"
 
 Populated from the feasibility report findings. Generate these subsections:
 
+### 2.0 API Deprecation Scanner Run
+
+**Run these before making any migration decisions.** Combine their output with the feasibility report findings to build a complete deprecation inventory.
+
+```bash
+# Scan live cluster + Helm v3 history (Secrets/ConfigMaps)
+kubent -o json
+
+# Exit non-zero if issues found (use in CI gates):
+# kubent -e
+
+# Scan Helm releases for deprecated apiVersions
+pluto detect-helm -o json --target-versions k8s=<TARGET_VERSION>
+
+# Scan static manifest files in your IaC repo:
+# pluto detect-files -d <manifests-dir>
+```
+
+**GATE:** If kubent or pluto report any REMOVED APIs (not just deprecated), halt immediately. Those resources **will not work** after the control plane upgrade. Remediate all removed API findings before proceeding.
+
+```text
+SUMMARY:
+  kubent findings:  <count> deprecated, <count> removed
+  pluto findings:   <count> deprecated, <count> removed
+
+  All REMOVED APIs remediated: [ ] YES / [ ] NO
+  All DEPRECATED APIs acknowledged or migrated: [ ] YES / [ ] NO
+```
+
 ### 2.1 Deprecated API Migration
 
-For every deprecated API object from the report:
+For every deprecated API object from the report (and from kubent/pluto scans above):
 
 ```text
 ACTION [CRITICAL]: <object> in <namespace>

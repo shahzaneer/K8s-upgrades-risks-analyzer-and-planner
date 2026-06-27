@@ -47,6 +47,8 @@ Given a source and target Kubernetes version, this project:
 | `aws eks` | `describe-cluster`, `describe-addon`, `list-addons`, `describe-nodegroup`, `list-nodegroups` |
 | `gcloud container` | `clusters describe`, `node-pools list`, `operations list`, `get-server-config` |
 | `az aks` | `show`, `get-upgrades`, `nodepool list`, `nodepool show` |
+| `kubent` | Reads cluster resources + Helm v3 Secrets/ConfigMaps (no mutations) |
+| `pluto` | Reads cluster resources + Helm release Secrets (no mutations) |
 
 **No `apply`, `create`, `delete`, `patch`, `edit`, `scale`, `drain`, `cordon`, or `upgrade` commands are present.** The assessment only reads cluster state — it never mutates it.
 
@@ -95,7 +97,9 @@ Review `plan.md` carefully. Execute the steps during a planned maintenance windo
 - `kubectl` configured with cluster access
 - Platform CLI (`aws`, `gcloud`, or `az`) if using a managed cluster
 - `jq` for JSON parsing (optional but recommended)
-- Read access to cluster resources (no admin/write permissions needed for the assessment)
+- `kubent` (Kube No Trouble) for API deprecation scanning — `brew install kubent`
+- `pluto` (Fairwinds) for Helm-aware deprecation scanning — `brew install pluto`
+- Read access to cluster resources (no admin/write permissions needed for the assessment) + read access to Secrets (for Helm release history scanning)
 
 ---
 
