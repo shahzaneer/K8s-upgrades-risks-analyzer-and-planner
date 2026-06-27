@@ -2,16 +2,16 @@
 
 ## Objective
 
-You are acting as a Senior Kubernetes Platform Engineer. Your task is to read the assessment report `cluster-upgrade-feasibility-and-risks.md`, detect the **platform** from its Executive Summary, and produce a **platform-specific** step-by-step upgrade execution plan.
+You are acting as a Senior Kubernetes Platform Engineer. Your task is to read the assessment report `analysis/cluster-upgrade-feasibility-and-risks.md`, detect the **platform** from its Executive Summary, and produce a **platform-specific** step-by-step upgrade execution plan.
 
-**Output file: `plan.md`** — a new file containing ONLY the upgrade plan for the detected platform. DO NOT overwrite this template file.
+**Output file: `plans/plan.md`** — a new file containing ONLY the upgrade plan for the detected platform. Create the `plans/` directory if it does not exist. DO NOT overwrite this template file.
 
 ---
 
 ## Input File
 
 ```text
-cluster-upgrade-feasibility-and-risks.md
+analysis/cluster-upgrade-feasibility-and-risks.md
 ```
 
 Read its entire contents. Extract:
@@ -732,11 +732,11 @@ FINAL CLASSIFICATION: [ ] SUCCESS [ ] PARTIAL [ ] FAILURE
 
 ### Rule 0: Output File
 
-Write the generated execution plan to **`plan.md`** (a new file). DO NOT overwrite `cluster-upgrade-execution-plan.md` (this template) or `prompt.md`. Both templates remain unchanged.
+Write the generated execution plan to **`plans/plan.md`** (a new file). Create the `plans/` directory if it does not exist. DO NOT overwrite `cluster-upgrade-execution-plan.md` (this template) or `prompt.md`. Both templates remain unchanged.
 
 ### Rule 1: Platform-Only Output
 
-Read `cluster-upgrade-feasibility-and-risks.md` → Extract `PLATFORM:` field → Generate ONLY the sections applicable to that platform. Do NOT include sections for other platforms.
+Read `analysis/cluster-upgrade-feasibility-and-risks.md` → Extract `PLATFORM:` field → Generate ONLY the sections applicable to that platform. Do NOT include sections for other platforms.
 
 ### Rule 2: Finding-Driven Content
 
@@ -763,4 +763,4 @@ Action: Operator must manually provide <information>.
 
 ### Rule 5: Completeness Enforcement
 
-Every finding from `cluster-upgrade-feasibility-and-risks.md` must appear somewhere in this execution plan. Silent omission is not allowed.
+Every finding from `analysis/cluster-upgrade-feasibility-and-risks.md` must appear somewhere in this execution plan. Silent omission is not allowed.
